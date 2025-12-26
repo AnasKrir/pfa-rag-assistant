@@ -1,4 +1,4 @@
-# 🎓 PFA — Assistant Administratif Intelligent (RAG + LLMs) pour une école d’ingénieurs
+# 🤖 PFA — Assistant Administratif Intelligent (RAG + LLMs) pour une école d’ingénieurs
 
 ![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Web%20App-success)
