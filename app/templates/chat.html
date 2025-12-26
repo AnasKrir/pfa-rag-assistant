@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Chat{% endblock %}
+{% block content %}
+  <h1>Assistant RAG</h1>
+
+  <div class="card">
+    <div class="muted small">
+      {% if user.role == 'student' %}
+        Espace Étudiant — questions administratives (inscription, attestation, bourse…)
+      {% elif user.role == 'teacher' %}
+        Espace Enseignant — procédures, règlement, documents…
+      {% else %}
+        Espace Administration — suivi & informations internes
+      {% endif %}
+    </div>
+
+    <form method="post" action="/chat" style="margin-top:10px;">
+      <label>Ta question</label>
+      <textarea name="question" rows="4" required
+        placeholder="{% if user.role=='student' %}Ex: Comment demander une attestation de scolarité ?{% elif user.role=='teacher' %}Ex: Quelle est la procédure de congé ?{% else %}Ex: Comment traiter une demande ?{% endif %}"></textarea>
+
+      <div class="row row-spaced">
+        <p class="muted small" style="margin:0;">RAG + LLM. Les sources sont indiquées si disponibles.</p>
+        <button type="submit" class="btn">Envoyer</button>
+      </div>
+    </form>
+  </div>
+
+  <h2>Historique (10 derniers)</h2>
+
+  {% if logs and logs|length > 0 %}
+    <div class="card">
+      {% for l in logs %}
+        <div class="msg">
+          <div class="bubble q"><b>Q:</b> {{ l.question }}</div>
+          <div style="height:8px;"></div>
+          <div class="bubble a"><b>A:</b> {{ l.answer }}</div>
+          <div class="muted small" style="margin-top:8px;">{{ l.created_at }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card muted">Aucun historique pour le moment.</div>
+  {% endif %}
+
+  <script>
+  const form = document.querySelector("form");
+  const btn = document.querySelector("button[type='submit']");
+  if (form && btn) {
+    form.addEventListener("submit", () => {
+      btn.disabled = true;
+      btn.textContent = "Patiente...";
+    });
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Générateur{% endblock %}
+{% block content %}
+  <h1>Générateur d’attestation</h1>
+  <p class="muted">Date système : <b>{{ today }}</b></p>
+
+  {% set p = prefill or {} %}
+
+  <form method="post" action="/generate/preview" class="card" id="attestation-form">
+    {% if request_id %}
+      <input type="hidden" name="request_id" value="{{ request_id }}" />
+      <div class="badge" style="margin-bottom:10px;">
+        Demande #{{ request_id }} — <strong>{{ request_status }}</strong>
+      </div>
+    {% endif %}
+
+    <h2>1) École</h2>
+    <div class="form-grid">
+      <div>
+        <label>Nom de l’école</label>
+        <input name="school_name" value="EMSI" required />
+      </div>
+      <div>
+        <label>Ville</label>
+        <input name="school_city" value="Rabat" required />
+      </div>
+    </div>
+
+    <h2 style="margin-top:14px;">2) Étudiant</h2>
+    <div class="form-grid">
+      <div>
+        <label>Nom complet</label>
+        <input name="student_full_name" value="{{ p.get('student_full_name','') }}" required />
+      </div>
+      <div>
+        <label>Niveau</label>
+        <input name="student_level" value="{{ p.get('student_level','') }}" placeholder="Ex: 5IIR" required />
+      </div>
+
+      <div>
+        <label>CNE</label>
+        <input name="student_cne" value="{{ p.get('student_cne','') }}" placeholder="Ex: E-000-956-2022" required />
+      </div>
+      <div>
+        <label>CIN</label>
+        <input name="student_cin" value="{{ p.get('student_cin','') }}" placeholder="Ex: GI11464" required />
+      </div>
+    </div>
+
+    <h2 style="margin-top:14px;">3) Stage</h2>
+    <div class="form-grid">
+      <div>
+        <label>Entreprise d’accueil</label>
+        <input name="company_name" value="{{ p.get('company_name','') }}" required />
+      </div>
+      <div>
+        <label>Sujet</label>
+        <input name="internship_topic" value="{{ p.get('internship_topic','') }}" placeholder="Ex: Assistant IA RAG" required />
+      </div>
+
+      <div>
+        <label>Date début</label>
+        <input name="start_date" value="{{ p.get('start_date','') }}" placeholder="JJ/MM/AAAA" required />
+      </div>
+      <div>
+        <label>Date fin</label>
+        <input name="end_date" value="{{ p.get('end_date','') }}" placeholder="JJ/MM/AAAA" required />
+      </div>
+    </div>
+
+    <h2 style="margin-top:14px;">4) Signature</h2>
+    <div class="form-grid">
+      <div>
+        <label>Signataire</label>
+        <input name="signer_name" placeholder="Ex: Directeur pédagogique" required />
+      </div>
+      <div>
+        <label>Date d’émission</label>
+        <input name="issue_date" value="{{ today }}" required />
+      </div>
+    </div>
+
+    <h2 style="margin-top:14px;">5) Note (optionnel)</h2>
+    <label>Note optionnelle (peut être améliorée par IA)</label>
+    <textarea name="extra_note" rows="3" placeholder="Ex: Attestation demandée pour...">{{ p.get('extra_note','') }}</textarea>
+
+    <div class="row row-spaced">
+      <button class="btn btn-secondary" type="button" id="btn-improve">Améliorer le texte (IA)</button>
+      <span class="muted small" id="improve-status"></span>
+    </div>
+
+    <div class="row row-spaced" style="margin-top:10px;">
+      <label class="check">
+        <input type="checkbox" name="ai_improve" value="1" />
+        <span>Améliorer la note avec IA lors de l’export PDF</span>
+      </label>
+
+      <div class="row">
+        <button class="btn" type="submit">Prévisualiser HTML</button>
+        <button class="btn btn-secondary" type="submit" formaction="/generate/pdf" formmethod="post">Exporter PDF</button>
+      </div>
+    </div>
+
+    <p class="muted small">Astuce : la prévisualisation est imprimable (Cmd/Ctrl + P).</p>
+  </form>
+
+  <script>
+  (function () {
+    const btn = document.getElementById("btn-improve");
+    const status = document.getElementById("improve-status");
+    const ta = document.querySelector('textarea[name="extra_note"]');
+    if (!btn || !ta) return;
+
+    btn.addEventListener("click", async () => {
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Amélioration…";
+      if (status) status.textContent = "";
+
+      try {
+        const fd = new FormData();
+        fd.append("extra_note", ta.value || "");
+
+        const res = await fetch("/generate/improve", { method: "POST", body: fd });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const data = await res.json();
+        if (typeof data.improved === "string") {
+          ta.value = data.improved;
+          if (status) status.textContent = "Texte amélioré ✅";
+        } else {
+          throw new Error("Bad response");
+        }
+      } catch (e) {
+        if (status) status.textContent = "LLM indisponible ⚠️";
+        alert("Impossible d'améliorer le texte (serveur LLM indisponible).");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    });
+  })();
+  </script>
+{% endblock %}

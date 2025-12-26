@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Demandes (Teacher){% endblock %}
+{% block content %}
+  <h1>Demandes approuvées</h1>
+  <p class="muted">Teacher : générer l’attestation depuis une demande acceptée.</p>
+
+  {% if reqs and reqs|length > 0 %}
+    <div class="card">
+      {% for r in reqs %}
+        {% set p = r.payload() %}
+        <div class="msg">
+          <div class="bubble q">
+            <b>#{{ r.id }}</b> — <b>{{ r.status }}</b>
+            <div class="muted small" style="margin-top:6px;">
+              {{ p.student_full_name }} • {{ p.student_level }} • {{ p.company_name }} ({{ p.start_date }} → {{ p.end_date }})
+            </div>
+          </div>
+
+          <div class="row row-spaced" style="margin-top:10px;">
+            <span class="muted small">Ouvre le générateur pré-rempli.</span>
+            <a class="btn" href="/generate?req_id={{ r.id }}">Générer</a>
+          </div>
+
+          <div class="muted small" style="margin-top:8px;">{{ r.updated_at }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card muted">Aucune demande approuvée.</div>
+  {% endif %}
+{% endblock %}

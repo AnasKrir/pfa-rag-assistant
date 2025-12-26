@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Mes demandes{% endblock %}
+{% block content %}
+  <h1>Mes demandes</h1>
+
+  <div class="card">
+    <h2>Créer une demande d’attestation de stage</h2>
+
+    <form method="post" action="/requests/new">
+      <div class="form-grid">
+        <div>
+          <label>Nom complet</label>
+          <input name="student_full_name" placeholder="Ex: KRIR Anas" required />
+        </div>
+        <div>
+          <label>Niveau</label>
+          <input name="student_level" placeholder="Ex: 5IIR" required />
+        </div>
+
+        <div>
+          <label>CNE</label>
+          <input name="student_cne" required />
+        </div>
+        <div>
+          <label>CIN</label>
+          <input name="student_cin" required />
+        </div>
+
+        <div>
+          <label>Entreprise</label>
+          <input name="company_name" required />
+        </div>
+        <div>
+          <label>Ville (optionnel)</label>
+          <input name="company_city" />
+        </div>
+
+        <div>
+          <label>Sujet</label>
+          <input name="internship_topic" required />
+        </div>
+        <div>
+          <label>Date début</label>
+          <input name="start_date" placeholder="JJ/MM/AAAA" required />
+        </div>
+
+        <div>
+          <label>Date fin</label>
+          <input name="end_date" placeholder="JJ/MM/AAAA" required />
+        </div>
+      </div>
+
+      <label>Note (optionnel)</label>
+      <textarea name="extra_note" rows="3" placeholder="Ex: Attestation demandée pour..."></textarea>
+
+      <div class="row row-spaced">
+        <span class="muted small">Après envoi, l’admin acceptera/refusera.</span>
+        <button class="btn" type="submit">Envoyer la demande</button>
+      </div>
+    </form>
+  </div>
+
+  <h2>Historique</h2>
+  {% if reqs and reqs|length > 0 %}
+    <div class="card">
+      {% for r in reqs %}
+        <div class="msg">
+          <div class="bubble q">
+            <b>Demande #{{ r.id }}</b> — {{ r.doc_type }} — <b>{{ r.status }}</b>
+          </div>
+          {% if r.admin_comment %}
+            <div style="height:8px;"></div>
+            <div class="bubble a"><b>Message admin:</b> {{ r.admin_comment }}</div>
+          {% endif %}
+          <div class="muted small" style="margin-top:8px;">{{ r.created_at }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card muted">Aucune demande.</div>
+  {% endif %}
+{% endblock %}

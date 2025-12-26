@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/static/style.css" />
+  <title>{% block title %}AI RAG Assistant{% endblock %}</title>
+</head>
+<body>
+  <div class="container">
+
+    <header class="nav no-print">
+      <a class="brand" href="/chat">
+        <span class="brand-dot"></span>
+        AI RAG Assistant
+      </a>
+
+      {% if user %}
+        <nav class="nav-links">
+          <a href="/chat">Chat</a>
+
+          {% if user.role in ['student'] %}
+            <a href="/requests">Mes demandes</a>
+          {% endif %}
+
+          {% if user.role in ['admin'] %}
+            <a href="/requests/admin">Demandes</a>
+          {% endif %}
+
+          {% if user.role in ['teacher'] %}
+              <a href="/requests/teacher">Demandes</a>
+          {% endif %}
+
+          {% if user.role in ['teacher'] %}
+            <a href="/generate">Générateur</a>
+          {% endif %}
+
+          {% if user.role in ['admin'] %}
+            <a href="/dashboard">Dashboard</a>
+          {% endif %}
+        </nav>
+
+        <div class="nav-right">
+          <span class="badge role-{{ user.role }}">
+            <span>👤</span>
+            <strong>{{ user.username }}</strong>
+            <span>•</span>
+            <span>{{ user.role }}</span>
+          </span>
+          <a class="btn btn-secondary" href="/logout">Logout</a>
+        </div>
+      {% else %}
+        <div class="nav-right">
+          <span class="badge"><strong>Bienvenue</strong> <span class="muted">— connexion requise</span></span>
+        </div>
+      {% endif %}
+    </header>
+
+    <div class="page">
+      {% block content %}{% endblock %}
+    </div>
+
+  </div>
+</body>
+</html>

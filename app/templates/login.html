@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <div class="card" style="max-width:520px;margin:18px auto;">
+    <h1 style="margin-bottom:6px;">Connexion</h1>
+    
+
+    {% if error %}
+      <div class="alert">Identifiants invalides.</div>
+    {% endif %}
+
+    <form method="post" action="/login" style="margin-top:12px;">
+      <label>Username</label>
+      <input name="username" type="text" required />
+
+      <label>Password</label>
+      <input name="password" type="password" required />
+
+      <div class="row row-spaced">
+        <button class="btn" type="submit">Se connecter</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

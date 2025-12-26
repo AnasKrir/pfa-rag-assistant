@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Demandes (Admin){% endblock %}
+{% block content %}
+  <h1>Demandes d’attestation</h1>
+  <p class="muted">Admin : accepter ou refuser les demandes.</p>
+
+  {% if reqs and reqs|length > 0 %}
+    <div class="card">
+      {% for r in reqs %}
+        {% set p = r.payload() %}
+        <div class="msg">
+          <div class="bubble q">
+            <b>#{{ r.id }}</b> — <b>{{ r.status }}</b> — Student ID: {{ r.student_id }}
+            <div class="muted small" style="margin-top:6px;">
+              {{ p.student_full_name }} • {{ p.student_level }} • {{ p.company_name }} ({{ p.start_date }} → {{ p.end_date }})
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px; flex-wrap:wrap;">
+            <form method="post" action="/requests/admin/{{ r.id }}/approve">
+              <button class="btn" type="submit">✅ Approuver</button>
+            </form>
+
+            <form method="post" action="/requests/admin/{{ r.id }}/refuse" style="flex:1; min-width:260px;">
+              <input name="admin_comment" placeholder="Motif de refus (optionnel)" />
+              <button class="btn btn-secondary" type="submit">❌ Refuser</button>
+            </form>
+          </div>
+
+          <div class="muted small" style="margin-top:8px;">{{ r.created_at }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="card muted">Aucune demande.</div>
+  {% endif %}
+{% endblock %}

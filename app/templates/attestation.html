@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Attestation{% endblock %}
+
+{% block content %}
+  <div class="no-print row row-spaced" style="margin-bottom:14px;">
+    <a class="btn btn-secondary" href="/generate">← Retour</a>
+    <button class="btn" onclick="window.print()">Imprimer</button>
+  </div>
+
+  <div class="paper">
+    <div class="paper-header">
+      <div>
+        <div class="paper-title">ATTESTATION DE STAGE</div>
+        <div class="muted">{{ school_name }} — {{ school_city }}</div>
+      </div>
+      <div class="muted">Le {{ issue_date }}</div>
+    </div>
+
+    <h1 style="margin-top:18px;">Attestation</h1>
+
+    <div class="paper-body">
+      <p>
+        <b>{{ school_name }}</b> atteste que l’étudiant(e) ci-dessous a effectué un stage
+        au sein de l’organisme d’accueil mentionné.
+      </p>
+
+      <div class="grid" style="margin-top:14px;">
+        <div class="note">
+          <div class="note-title">Informations étudiant</div>
+          <div><b>Nom :</b> {{ student_full_name or '—' }}</div>
+          <div><b>CIN :</b> {{ student_cin or '—' }}</div>
+          <div><b>CNE :</b> {{ student_cne or '—' }}</div>
+          <div><b>Niveau :</b> {{ student_level or '—' }}</div>
+        </div>
+
+        <div class="note">
+          <div class="note-title">Informations stage</div>
+          <div><b>Entreprise :</b> {{ company_name or '—' }}</div>
+          <div><b>Ville :</b> {{ company_city or '—' }}</div>
+          <div><b>Période :</b> du {{ start_date or '—' }} au {{ end_date or '—' }}</div>
+          <div><b>Sujet :</b> {{ internship_topic or '—' }}</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <p style="white-space:pre-wrap;">{{ body_text }}</p>
+      </div>
+
+      {% if extra_note and extra_note|trim %}
+        <div class="note" style="margin-top:14px;">
+          <div class="note-title">Note</div>
+          <div style="white-space:pre-wrap;">{{ extra_note }}</div>
+        </div>
+      {% endif %}
+
+      <div class="signature">
+        <div class="signature-box">
+          <div class="muted small">Signature</div>
+          {% if signatory_role and signatory_role|trim %}
+            <div class="muted small" style="margin-top:4px;">{{ signatory_role }}</div>
+          {% endif %}
+          <div class="signature-name">{{ signer_name or '—' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
