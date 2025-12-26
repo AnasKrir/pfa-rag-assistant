@@ -1,13 +1,13 @@
 # 🤖 PFA — Assistant Administratif Intelligent (RAG + LLMs) pour une école d’ingénieurs
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue)
+![Python](https://img.shields.io/badge/Python-3%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Web%20App-success)
 ![RAG](https://img.shields.io/badge/RAG-Embeddings%20%2B%20Retrieval-brightgreen)
 ![SQLite](https://img.shields.io/badge/DB-SQLite-informational)
 ![LLM](https://img.shields.io/badge/LLM-llama.cpp%20(optional)-orange)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 
-**PFA — Assistant RAG** est un prototype (MVP) d’assistant administratif **basé sur RAG + LLMs** pour une **gestion intégrée des services** d’une école d’ingénieurs (**étudiants / enseignants / administration**).
+**PFA " Projet de fin d'année " — Assistant RAG** est un prototype (MVP) d’assistant administratif **basé sur RAG + LLMs** pour une **gestion intégrée des services** d’une école d’ingénieurs (**étudiants / enseignants / administration**).
 
 Objectif : **centraliser** les documents (PDF) et permettre de **poser des questions en langage naturel**, avec **rôles**, **historique**, **dashboard**, et **génération de documents**.
 
